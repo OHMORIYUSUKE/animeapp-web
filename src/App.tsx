@@ -1,26 +1,21 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { DetailPage } from "./pages/anime";
+import { TopPage } from "./pages";
+import { Error404Page } from "./pages/404";
+import { ChakraProvider } from "@chakra-ui/react";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ChakraProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path={`/`} element={<TopPage />} />
+          <Route path={`/anime/:name`} element={<DetailPage />} />
+          <Route path="*" element={<Error404Page />} />
+        </Routes>
+      </BrowserRouter>
+    </ChakraProvider>
   );
-}
+};
 
 export default App;
