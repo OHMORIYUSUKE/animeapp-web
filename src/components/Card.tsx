@@ -2,9 +2,11 @@ import { Box, Image, Center } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 interface Props {
+  id: number;
   title: string;
   image: string;
   productCompanies: string;
+  pulldownValue: string;
 }
 
 export const Card = (props: Props): JSX.Element => {
@@ -16,7 +18,10 @@ export const Card = (props: Props): JSX.Element => {
       overflow="hidden"
       boxShadow="lg"
     >
-      <Link to={"/anime/" + props.title}>
+      <Link
+        to={"/anime/" + props.title}
+        state={{ pulldownValue: props.pulldownValue, id: props.id } as const}
+      >
         <Center>
           <Image src={props.image} alt={props.title} maxHeight="200px" />
         </Center>

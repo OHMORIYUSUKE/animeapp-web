@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const content = z.object({
+export const apiContentSchema = z.object({
   id: z.number().min(1),
   title: z.string().min(1),
   title_short1: z.string(),
@@ -25,4 +25,4 @@ const content = z.object({
   ogp_description: z.string(),
 });
 
-export const apiSchema = z.array(content);
+export const apiSchema = z.array(apiContentSchema);
