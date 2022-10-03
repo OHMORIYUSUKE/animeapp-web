@@ -22,16 +22,15 @@ export const TopPage = (): JSX.Element => {
   const [apiResponse, setApiResponse] = useState(
     [] as z.infer<typeof apiSchema>
   );
-  const [value, setValue] = useState({
+  const [pullDownValue, setPullDownValue] = useState({
     id: "20224",
   } as FormWhenState);
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(event.target.value);
-    setValue(YearAndCool.getById(event.target.value)!);
+    setPullDownValue(YearAndCool.getById(event.target.value)!);
   };
   Api.get({
-    year: YearAndCool.getById(value.id)?.year,
-    cool: YearAndCool.getById(value.id)?.cool,
+    year: YearAndCool.getById(pullDownValue.id)?.year,
+    cool: YearAndCool.getById(pullDownValue.id)?.cool,
   } as UrlParams)
     .then((data) => {
       setApiResponse(data);
@@ -58,9 +57,11 @@ export const TopPage = (): JSX.Element => {
         </FormControl>
         <Alert status="warning" mt={3}>
           <AlertIcon />
-          {YearAndCool.getById(value.id)?.year +
+          {YearAndCool.getById(pullDownValue.id)?.year +
             "/" +
-            YearAndCool.getJapaneseByCool(YearAndCool.getById(value.id)?.cool!)}
+            YearAndCool.getJapaneseByCool(
+              YearAndCool.getById(pullDownValue.id)?.cool!
+            )}
           アニメ が選択されています。表示まで時間がかかることがあります。
         </Alert>
       </Box>
