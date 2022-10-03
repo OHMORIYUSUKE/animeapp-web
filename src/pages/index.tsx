@@ -1,6 +1,13 @@
-import { Box, Grid } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  FormControl,
+  FormLabel,
+  Grid,
+  Select,
+} from "@chakra-ui/react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { z } from "zod";
 import { Card } from "../components/Card";
 import { Api, UrlParams } from "../lib/api";
@@ -9,11 +16,23 @@ import NoImage from "../images/noimage.png";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 
+import { FormWhen, FormWhenState, YearAndCool } from "../lib/YearAndCool";
+
 export const TopPage = (): JSX.Element => {
   const [apiResponse, setApiResponse] = useState(
     [] as z.infer<typeof apiSchema>
   );
-  Api.get({ year: 2022, cool: 4 } as UrlParams)
+  const [value, setValue] = useState({
+    id: "20224",
+  } as FormWhenState);
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(event.target.value);
+    setValue(YearAndCool.getById(event.target.value)!);
+  };
+  Api.get({
+    year: YearAndCool.getById(value.id)?.year,
+    cool: YearAndCool.getById(value.id)?.cool,
+  } as UrlParams)
     .then((data) => {
       setApiResponse(data);
     })
@@ -23,8 +42,28 @@ export const TopPage = (): JSX.Element => {
   return (
     <>
       <Header />
-      <h1>top</h1>
-      <Link to={`/anime`}>詳細</Link>
+      <Box mt={7} mb={7} ml={5} mr={5}>
+        <FormControl id="when">
+          <FormLabel>アニメの放送時期</FormLabel>
+          <Select
+            onChange={handleChange}
+            placeholder="知りたい放送時期を選択してください"
+          >
+            {YearAndCool.getAll().map((data) => (
+              <option value={String(data.year) + String(data.cool)}>
+                {data.year} / {data.coolJapanese}アニメ
+              </option>
+            ))}
+          </Select>
+        </FormControl>
+        <Alert status="warning" mt={3}>
+          <AlertIcon />
+          {YearAndCool.getById(value.id)?.year +
+            "/" +
+            YearAndCool.getJapaneseByCool(YearAndCool.getById(value.id)?.cool!)}
+          アニメ が選択されています。表示まで時間がかかることがあります。
+        </Alert>
+      </Box>
       <Box mt={7} mb={7} ml={5} mr={5}>
         <Grid templateColumns="repeat(4, 1fr)" gap={2}>
           {apiResponse.map((data) => (
