@@ -14,7 +14,6 @@ export interface FormWhenState {
 }
 
 export class YearAndCool {
-  constructor() {}
   public static getAll(): FormWhen[] {
     const whenData: FormWhen[] = [];
     const day = new Date();

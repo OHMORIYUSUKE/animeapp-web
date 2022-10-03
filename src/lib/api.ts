@@ -8,8 +8,6 @@ export interface UrlParams {
 }
 
 export class Api {
-  constructor() {}
-
   public static async get(
     params: UrlParams
   ): Promise<z.infer<typeof apiSchema>> {
