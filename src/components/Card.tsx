@@ -7,7 +7,7 @@ interface Props {
   productCompanies: string;
 }
 
-export const Card = (props: Props) => {
+export const Card = (props: Props): JSX.Element => {
   return (
     <Box
       maxW="sm"

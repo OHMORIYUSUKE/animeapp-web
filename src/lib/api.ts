@@ -1,4 +1,6 @@
 import axios from "axios";
+import { z } from "zod";
+import { apiSchema } from "../schema/apiSchema";
 
 export interface UrlParams {
   year: number;
@@ -8,7 +10,9 @@ export interface UrlParams {
 export class Api {
   constructor() {}
 
-  public static async get(params: UrlParams): Promise<any> {
+  public static async get(
+    params: UrlParams
+  ): Promise<z.infer<typeof apiSchema>> {
     return await axios
       .get(
         `https://raw.githubusercontent.com/OHMORIYUSUKE/animeapp-db/api/${String(
@@ -16,7 +20,7 @@ export class Api {
         )}-${String(params.cool)}.json`
       )
       .then((res) => {
-        return res.data;
+        return apiSchema.parse(res.data);
       })
       .catch((e) => {
         throw new Error("APIエラー メッセージ:" + e);
