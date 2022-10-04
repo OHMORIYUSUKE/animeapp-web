@@ -64,7 +64,9 @@ export const DetailPage = (): JSX.Element => {
             colorScheme="teal"
             variant="outline"
             size="lg"
-            onClick={() => navigate(-1)}
+            onClick={() =>
+              navigate("/", { state: { pulldownValue: state.pulldownValue } })
+            }
           >
             <AiOutlineCaretLeft
               style={{ display: "inline-flex", verticalAlign: "middle" }}

@@ -20,7 +20,7 @@ export const TopPage = (): JSX.Element => {
     [] as z.infer<typeof apiSchema>
   );
   const [pulldownValue, setPulldownValue] = useState({
-    id: state.pulldownValue === "" ? "20224" : state.pulldownValue,
+    id: state === null ? "20224" : state.pulldownValue,
   } as FormWhenState);
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setPulldownValue(YearAndCool.getById(event.target.value)!);
