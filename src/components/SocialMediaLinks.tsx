@@ -12,7 +12,7 @@ export const SocialMediaLinks = (): JSX.Element => (
     />
     <IconButton
       as="a"
-      href="https://github.com/OHMORIYUSUKE"
+      href="https://github.com/OHMORIYUSUKE/animeapp-web"
       aria-label="GitHub"
       icon={<FaGithub fontSize="20px" />}
     />
