@@ -11,7 +11,7 @@ import { Header } from "../components/Header";
 import { FormWhenState, YearAndCool } from "../lib/YearAndCool";
 import { PulldownYearAndCool } from "../components/PulldownYearAndCool";
 import { Loading } from "../components/Loading";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const urlQueryType = z.object({
   srcId: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
@@ -62,7 +62,7 @@ export const TopPage = (): JSX.Element => {
         console.log(e);
         navigate("/500");
       });
-  }, [urlQuery]);
+  });
 
   if (isLoading) {
     return (

@@ -1,10 +1,6 @@
 import axios from "axios";
 import { z } from "zod";
-import {
-  apiContentSchema,
-  apiNotFoundSchema,
-  apiSchema,
-} from "../schema/apiSchema";
+import { apiContentSchema, apiSchema } from "../schema/apiSchema";
 
 export interface UrlParams {
   year: number;

@@ -10,14 +10,14 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { AiOutlineCaretLeft } from "react-icons/ai";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { Footer } from "../../components/Footer";
 import { Header } from "../../components/Header";
 import { Api } from "../../lib/api";
 import { YearAndCool } from "../../lib/YearAndCool";
 import { apiContentSchema } from "../../schema/apiSchema";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { RiBuildingFill } from "react-icons/ri";
 import { BiLinkExternal, BiBadgeCheck } from "react-icons/bi";
@@ -44,7 +44,9 @@ export const DetailPage = (): JSX.Element => {
 
   const [searchParams] = useSearchParams();
   // url query
-  const [urlQuery, setUrlQuery] = useState({} as z.infer<typeof urlQueryType>);
+  const [urlQuery] = useState(
+    Object.fromEntries(searchParams) as z.infer<typeof urlQueryType>
+  );
   // api
   const [apiResponse, setApiResponse] = useState(
     {} as z.infer<typeof apiContentSchema>
@@ -52,24 +54,19 @@ export const DetailPage = (): JSX.Element => {
   // loading
   const [isLoading, setIsLoading] = useState(true as boolean);
 
-  useEffect(() => {
-    // url query
-    const urlQuery = urlQueryType.parse(Object.fromEntries(searchParams));
-    setUrlQuery(urlQuery);
-    // api
-    Api.getById(Number(urlQuery.id), {
-      year: YearAndCool.getById(String(urlQuery.srcId))?.year!,
-      cool: YearAndCool.getById(String(urlQuery.srcId))?.cool!,
+  // api
+  Api.getById(Number(urlQuery.id), {
+    year: YearAndCool.getById(String(urlQuery.srcId))?.year!,
+    cool: YearAndCool.getById(String(urlQuery.srcId))?.cool!,
+  })
+    .then((res) => {
+      setApiResponse(apiContentSchema.parse(res));
+      setIsLoading(false);
     })
-      .then((res) => {
-        setApiResponse(apiContentSchema.parse(res));
-        setIsLoading(false);
-      })
-      .catch((e) => {
-        console.log(e);
-        navigate("/500");
-      });
-  }, [searchParams]);
+    .catch((e) => {
+      console.log(e);
+      navigate("/500");
+    });
 
   if (isLoading) {
     return (
