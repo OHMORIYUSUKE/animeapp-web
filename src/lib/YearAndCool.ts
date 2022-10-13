@@ -18,7 +18,7 @@ export class YearAndCool {
     const whenData: FormWhen[] = [];
     const day = new Date();
     const nowYear = day.getFullYear();
-    const startYear = 2013;
+    const startYear = 2014;
     for (let i = startYear; i <= nowYear; i++) {
       for (let j = 0; j < 4; j++) {
         whenData.push({
@@ -43,5 +43,9 @@ export class YearAndCool {
 
   public static getJapaneseByCool(cool: Cool): CoolJapanese {
     return COOlLIST[cool - 1] as CoolJapanese;
+  }
+
+  public static getNow(): FormWhen {
+    return this.getAll().slice(-1)[0];
   }
 }

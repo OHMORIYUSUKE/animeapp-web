@@ -26,3 +26,7 @@ export const apiContentSchema = z.object({
 });
 
 export const apiSchema = z.array(apiContentSchema);
+
+export const apiNotFoundSchema = z.object({
+  message: z.enum(["no_data"]),
+});

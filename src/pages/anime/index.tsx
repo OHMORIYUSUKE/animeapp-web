@@ -17,7 +17,7 @@ import { Header } from "../../components/Header";
 import { Api } from "../../lib/api";
 import { YearAndCool } from "../../lib/YearAndCool";
 import { apiContentSchema } from "../../schema/apiSchema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { RiBuildingFill } from "react-icons/ri";
 import { BiLinkExternal, BiBadgeCheck } from "react-icons/bi";
@@ -28,28 +28,53 @@ import { FaTwitter } from "react-icons/fa";
 import NoImage from "../../images/noimage.png";
 import { Loading } from "../../components/Loading";
 
+import { useSearchParams } from "react-router-dom";
+
+const urlQueryType = z.object({
+  id: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: "Expected number, received a string",
+  }),
+  srcId: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: "Expected number, received a string",
+  }),
+});
+
 export const DetailPage = (): JSX.Element => {
-  const { state } = useLocation();
+  const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  // url query
+  const [urlQuery, setUrlQuery] = useState({} as z.infer<typeof urlQueryType>);
+  // api
   const [apiResponse, setApiResponse] = useState(
     {} as z.infer<typeof apiContentSchema>
   );
+  // loading
   const [isLoading, setIsLoading] = useState(true as boolean);
-  Api.getById(state.id, {
-    year: YearAndCool.getById(state.pulldownValue)?.year!,
-    cool: YearAndCool.getById(state.pulldownValue)?.cool!,
-  })
-    .then((res) => {
-      setApiResponse(apiContentSchema.parse(res));
-      setIsLoading(false);
+
+  useEffect(() => {
+    // url query
+    const urlQuery = urlQueryType.parse(Object.fromEntries(searchParams));
+    setUrlQuery(urlQuery);
+    // api
+    Api.getById(Number(urlQuery.id), {
+      year: YearAndCool.getById(String(urlQuery.srcId))?.year!,
+      cool: YearAndCool.getById(String(urlQuery.srcId))?.cool!,
     })
-    .catch((e) => {
-      console.log(e);
-    });
-  const navigate = useNavigate();
+      .then((res) => {
+        setApiResponse(apiContentSchema.parse(res));
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        navigate("/500");
+      });
+  }, [searchParams]);
+
   if (isLoading) {
     return (
       <>
-        <Header />
+        <Header srcId={urlQuery.srcId} />
         <Center mt={30}>
           <Container minW="4xl" centerContent>
             <Box padding="4" bg="gray.100" minW="4xl" minH="4xl">
@@ -64,9 +89,7 @@ export const DetailPage = (): JSX.Element => {
             colorScheme="teal"
             variant="outline"
             size="lg"
-            onClick={() =>
-              navigate("/", { state: { pulldownValue: state.pulldownValue } })
-            }
+            onClick={() => navigate("/?srcId=" + urlQuery.srcId)}
           >
             <AiOutlineCaretLeft
               style={{ display: "inline-flex", verticalAlign: "middle" }}
@@ -80,7 +103,7 @@ export const DetailPage = (): JSX.Element => {
   }
   return (
     <>
-      <Header />
+      <Header srcId={urlQuery.srcId} />
       <Center mt={30}>
         <Container maxW="4xl" centerContent>
           <Box padding="4" bg="gray.100" maxW="4xl">
@@ -193,9 +216,7 @@ export const DetailPage = (): JSX.Element => {
           colorScheme="teal"
           variant="outline"
           size="lg"
-          onClick={() =>
-            navigate("/", { state: { pulldownValue: state.pulldownValue } })
-          }
+          onClick={() => navigate("/?srcId=" + urlQuery.srcId)}
         >
           <AiOutlineCaretLeft
             style={{ display: "inline-flex", verticalAlign: "middle" }}

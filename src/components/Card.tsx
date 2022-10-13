@@ -19,7 +19,7 @@ export const Card = (props: Props): JSX.Element => {
       boxShadow="lg"
     >
       <Link
-        to={"/anime/" + props.title}
+        to={"/anime/?id=" + props.id + "&srcId=" + props.pulldownValue}
         state={{ pulldownValue: props.pulldownValue, id: props.id } as const}
       >
         <Center>

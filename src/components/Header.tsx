@@ -1,7 +1,11 @@
 import React from "react";
-import { Heading, Flex } from "@chakra-ui/react";
+import { Heading, Flex, Link } from "@chakra-ui/react";
 
-export const Header = (): JSX.Element => {
+interface Props {
+  srcId: string;
+}
+
+export const Header = (props: Props): JSX.Element => {
   return (
     <Flex
       as="nav"
@@ -13,9 +17,11 @@ export const Header = (): JSX.Element => {
       color="white"
     >
       <Flex align="center" mr={5}>
-        <Heading as="h1" size="lg" letterSpacing={"tighter"}>
-          Anime Library
-        </Heading>
+        <Link href={"/?srcId=" + props.srcId}>
+          <Heading as="h1" size="lg" letterSpacing={"tighter"}>
+            Anime Library
+          </Heading>
+        </Link>
       </Flex>
     </Flex>
   );

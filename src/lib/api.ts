@@ -1,6 +1,10 @@
 import axios from "axios";
 import { z } from "zod";
-import { apiContentSchema, apiSchema } from "../schema/apiSchema";
+import {
+  apiContentSchema,
+  apiNotFoundSchema,
+  apiSchema,
+} from "../schema/apiSchema";
 
 export interface UrlParams {
   year: number;
@@ -21,7 +25,7 @@ export class Api {
         return apiSchema.parse(res.data);
       })
       .catch((e) => {
-        throw new Error("APIエラー メッセージ:" + e);
+        throw new Error("エラーです。");
       });
   }
 

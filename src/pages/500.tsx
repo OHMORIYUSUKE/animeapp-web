@@ -6,7 +6,7 @@ import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { YearAndCool } from "../lib/YearAndCool";
 
-export const Error404Page = (): JSX.Element => {
+export const Error500Page = (): JSX.Element => {
   return (
     <>
       <Header
@@ -16,7 +16,7 @@ export const Error404Page = (): JSX.Element => {
       />
       <Center mt={70}>
         <Center bg="teal" h="200px" w="400px" color="white" borderRadius="lg">
-          <Text fontSize="4xl">404 NotFound</Text>
+          <Text fontSize="4xl">問題が発生しました</Text>
         </Center>
       </Center>
       <Center mt={30} mb={20}>

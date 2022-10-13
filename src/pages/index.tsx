@@ -11,37 +11,63 @@ import { Header } from "../components/Header";
 import { FormWhenState, YearAndCool } from "../lib/YearAndCool";
 import { PulldownYearAndCool } from "../components/PulldownYearAndCool";
 import { Loading } from "../components/Loading";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+
+const urlQueryType = z.object({
+  srcId: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: "Expected number, received a string",
+  }),
+});
 
 export const TopPage = (): JSX.Element => {
-  const { state } = useLocation();
-  useEffect(() => {}, [state]);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  // url query
+  const [urlQuery, setUrlQuery] = useState({
+    srcId:
+      searchParams.get("srcId") !== null
+        ? searchParams.get("srcId")
+        : String(YearAndCool.getNow().year) + String(YearAndCool.getNow().cool),
+  } as z.infer<typeof urlQueryType>);
+  // api
   const [apiResponse, setApiResponse] = useState(
     [] as z.infer<typeof apiSchema>
   );
+  // 選択
   const [pulldownValue, setPulldownValue] = useState({
-    id: state === null ? "20224" : state.pulldownValue,
+    id: urlQuery.srcId,
   } as FormWhenState);
+  // 選択変更
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setPulldownValue(YearAndCool.getById(event.target.value)!);
-  };
-  const [isLoading, setIsLoading] = useState(true as boolean);
-  Api.get({
-    year: YearAndCool.getById(pulldownValue.id)?.year,
-    cool: YearAndCool.getById(pulldownValue.id)?.cool,
-  } as UrlParams)
-    .then((data) => {
-      setApiResponse(data);
-      setIsLoading(false);
-    })
-    .catch((e) => {
-      console.log(e);
+    navigate("/?srcId=" + event.target.value);
+    setPulldownValue({
+      id:
+        String(YearAndCool.getById(event.target.value)?.year) +
+        String(YearAndCool.getById(event.target.value)?.cool),
     });
+    setUrlQuery({ srcId: event.target.value });
+  };
+  // loading
+  const [isLoading, setIsLoading] = useState(true as boolean);
+  useEffect(() => {
+    Api.get({
+      year: YearAndCool.getById(urlQuery.srcId)?.year,
+      cool: YearAndCool.getById(urlQuery.srcId)?.cool,
+    } as UrlParams)
+      .then((data) => {
+        setApiResponse(apiSchema.parse(data));
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        navigate("/500");
+      });
+  }, [urlQuery]);
 
   if (isLoading) {
     return (
       <>
-        <Header />
+        <Header srcId={urlQuery.srcId} />
         <PulldownYearAndCool
           pulldownValue={pulldownValue}
           handleChange={handleChange}
@@ -53,9 +79,10 @@ export const TopPage = (): JSX.Element => {
       </>
     );
   }
+
   return (
     <>
-      <Header />
+      <Header srcId={urlQuery.srcId} />
       <PulldownYearAndCool
         pulldownValue={pulldownValue}
         handleChange={handleChange}
