@@ -39,5 +39,45 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script src="https://cdn.jsdelivr.net/npm/sakana@1.0.8"></script>
+    <div class="sakana-box-chisato"></div>
+    <script>
+      Sakana.setMute(false);
+      const takina = Sakana.init({
+        // オプション：デフォルト
+        el: ".sakana-box-chisato", // 開始位置。ノードまたはセレクタ
+        character: "chisato", // キャラクターを指定。「ちさと」または「たきな」。
+        inertia: 0.01, // 慣性
+        decay: 0.99, // 減衰
+        r: 60, // 初期角度
+        y: 10, // 初期高さ
+        scale: 0.5, // 倍率
+        translateY: 0, // Y軸方向の高さ
+        canSwitchCharacter: false, // キャラクターの切り替え
+        onSwitchCharacter(character) {
+          // キャラクターを切り替えた時に呼ばれる
+          console.log(`${character} dayo~`);
+        },
+      });
+    </script>
+    <style>
+      html {
+        background: #ccc;
+      }
+      html .sakana-box-chisato {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+
+        transform-origin: 100% 100%;
+      }
+      html .sakana-box-chisato {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+
+        transform-origin: 100% 100%;
+      }
+    </style>
   </body>
 </html>
